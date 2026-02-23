@@ -1,22 +1,23 @@
 /**
- * Guessing App - Use Case 3: Hint Generation
+ * Guessing App - Use Case 4: Error Handling & Validation
  * 
  * MAIN CLASS
  * 
- * Coordinates the game flow:
- * 1. Initialize game
- * 2. Accept user guesses
- * 3. Validate guesses
- * 4. Give hints
- * 5. Stop when game ends
+ * This class coordinates the game execution while ensuring all user inputs are safely validated before processing
+ * 
+ * Responsibilites:
+ *  - Intialize game configuration
+ *  - Accept user input
+ *  - Validate input using ValidationService
+ *  - Handle game flow without crashing on invalid input
  * 
  * @author Developer
- * @version 3.0
+ * @version 4.0
 **/
 import java.util.*;
 
 class GuessingApp{
-    public static void main(String[] args){
+    public static void main(String[] args) throws InvalidInputException {
         System.out.println("Welcome to the Guessing App!");
         GameConfig config = new GameConfig();
         config.showRules();
@@ -31,7 +32,10 @@ class GuessingApp{
          */
         while (attempts < config.getMaxAttempts()){
             System.out.print("Enter your guess: ");
-            int guess = scanner.nextInt();
+            /*
+             * User input is validated before being used in the game logic 
+             */
+            int guess = ValidationService.validateInput(scanner.nextLine());
             attempts++;
 
             String result = GuessValidator.validateGuess(guess, config.getTargetNumber());
@@ -47,7 +51,7 @@ class GuessingApp{
             /*
              * Print hint if the hintCount is less than 4 
              */
-            if (hintCount < 4) {
+            if (hintCount < config.getMaxHints()) {
                 hint = HintService.generateHint(config.getTargetNumber(), hintCount);
                 hintCount++;
                 System.out.println(hint);
