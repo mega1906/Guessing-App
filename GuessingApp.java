@@ -1,31 +1,47 @@
 /**
- * Guessing App - Use Case 4: Error Handling & Validation
+ * Guessing App - Use Case 5: Game Result Storage
  * 
  * MAIN CLASS
  * 
- * This class coordinates the game execution while ensuring all user inputs are safely validated before processing
+ * This class coordinates the game flow and persists the final result after completion
  * 
  * Responsibilites:
  *  - Intialize game configuration
- *  - Accept user input
- *  - Validate input using ValidationService
- *  - Handle game flow without crashing on invalid input
+ *  - Accept and validate user guesses
+ *  - Generate hints when applicable
+ *  - Store game result at the end
  * 
  * @author Developer
- * @version 4.0
+ * @version 5.0
 **/
 import java.util.*;
 
 class GuessingApp{
     public static void main(String[] args) throws InvalidInputException {
+        System.out.println("============================");
         System.out.println("Welcome to the Guessing App!");
+        System.out.println("============================");
+
+        Scanner scanner = new Scanner(System.in);
+
+        /*
+         * Player name is captured once
+         * and stored along with game results 
+         */
+        System.out.print("Enter Player Name: ");
+        String player = scanner.nextLine();
+
         GameConfig config = new GameConfig();
         config.showRules();
 
-        Scanner scanner = new Scanner(System.in);
         int attempts = 0;
         int hintCount = 1;
         String hint = new String();
+
+        /*
+         * Tracks whether the player successfully guessed the number 
+         */
+        boolean win = false;
 
         /*
          * Game loop runs until the player exhausts the maximum attempts
@@ -45,6 +61,7 @@ class GuessingApp{
              */
             if ("CORRECT".equals(result)){
                 System.out.println(result);
+                win = true;
                 break;
             }
 
@@ -62,5 +79,6 @@ class GuessingApp{
              */
             System.out.println(result);
         }
+        StorageService.saveResult(player, attempts, win);
     }
 }
