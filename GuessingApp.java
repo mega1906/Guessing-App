@@ -1,16 +1,17 @@
 /**
- * Guessing App - Use Case 2: User Guess Submission
- *
+ * Guessing App - Use Case 3: Hint Generation
+ * 
  * MAIN CLASS
  * 
  * Coordinates the game flow:
  * 1. Initialize game
  * 2. Accept user guesses
  * 3. Validate guesses
- * 4. Stop when game ends
+ * 4. Give hints
+ * 5. Stop when game ends
  * 
  * @author Developer
- * @version 2.0
+ * @version 3.0
 **/
 import java.util.*;
 
@@ -22,6 +23,8 @@ class GuessingApp{
 
         Scanner scanner = new Scanner(System.in);
         int attempts = 0;
+        int hintCount = 1;
+        String hint = new String();
 
         /*
          * Game loop runs until the player exhausts the maximum attempts
@@ -32,14 +35,28 @@ class GuessingApp{
             attempts++;
 
             String result = GuessValidator.validateGuess(guess, config.getTargetNumber());
-            System.out.println(result);
-
+        
             /*
              * Stop the loop immediately if the correct number is guessed
              */
             if ("CORRECT".equals(result)){
+                System.out.println(result);
                 break;
             }
+
+            /*
+             * Print hint if the hintCount is less than 4 
+             */
+            if (hintCount < 4) {
+                hint = HintService.generateHint(config.getTargetNumber(), hintCount);
+                hintCount++;
+                System.out.println(hint);
+            }
+
+            /*
+             * Print the result message 
+             */
+            System.out.println(result);
         }
     }
 }
